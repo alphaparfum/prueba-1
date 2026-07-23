@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AlphaParfum | Perfumes por WhatsApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== RESET Y BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fcf9f5;
+            color: #1e1a16;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: #1e1a16;
+            color: #f0e8dd;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: #d4af37;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.6rem;
+            background: none;
+            border: none;
+            color: #f0e8dd;
+            transition: 0.2s;
+        }
+        .cart-icon:hover { color: #d4af37; }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: #d4af37;
+            color: #1e1a16;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-wsp-header {
+            background: #25D366;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        .btn-wsp-header:hover { background: #1ebe5a; transform: scale(1.02); }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 50px 0 30px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1e1a16;
+        }
+        .hero h1 .highlight { color: #d4af37; }
+        .hero p {
+            font-size: 1.15rem;
+            color: #5a4f47;
+            max-width: 600px;
+            margin: 12px auto 8px;
+        }
+
+        /* ===== BUSCADOR ===== */
+        .search-wrapper {
+            position: relative;
+            max-width: 500px;
+            margin: 16px auto 24px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 14px 24px;
+            border: 2px solid #ede7df;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .search-input:focus {
+            border-color: #d4af37;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+        }
+        .search-input::placeholder {
+            color: #b0a69b;
+        }
+        .search-shortcut {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ede7df;
+            color: #5a4f47;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+            border: 1px solid #e0d8ce;
+        }
+        .suggestions-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            max-height: 280px;
+            overflow-y: auto;
+            list-style: none;
+            padding: 8px 0;
+            margin: 6px 0 0;
+            display: none;
+            z-index: 1000;
+            border: 1px solid #f0e8dd;
+        }
+        .suggestions-list.show { display: block; }
+        .suggestions-list li {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: 0.15s;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #f8f5f0;
+        }
+        .suggestions-list li:last-child { border-bottom: none; }
+        .suggestions-list li:hover { background: #f3eee8; }
+        .suggestions-list li .suggestion-emoji { font-size: 1.4rem; }
+        .suggestions-list li .suggestion-name { font-weight: 600; }
+        .suggestions-list li .suggestion-name strong { color: #d4af37; }
+        .suggestions-list li .suggestion-brand { color: #8a7a6e; font-size: 0.8rem; margin-left: 6px; }
+        .suggestions-list li .suggestion-price { margin-left: auto; font-weight: 600; color: #1e1a16; font-size: 0.85rem; }
+        .suggestions-list::-webkit-scrollbar { width: 6px; }
+        .suggestions-list::-webkit-scrollbar-track { background: #f3eee8; border-radius: 10px; }
+        .suggestions-list::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
+
+        /* ===== FILTROS ===== */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 12px 0 32px;
+        }
+        .filter-btn {
+            background: #ede7df;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #3d352e;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: #d4af37;
+            color: #1e1a16;
+        }
+
+        /* ===== PRODUCTOS ===== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 10px 0 60px;
+            min-height: 200px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px 20px 24px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.04);
+            transition: 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #f0e8dd;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+            border-color: #d4af37;
+        }
+        .product-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #f3eee8;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5rem;
+            margin-bottom: 14px;
+            background-size: cover;
+            background-position: center;
+        }
+        .product-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .product-brand {
+            font-size: 0.85rem;
+            color: #8a7a6e;
+            margin-bottom: 8px;
+        }
+        .product-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #1e1a16;
+            margin-bottom: 14px;
+        }
+        .btn-add {
+            background: #1e1a16;
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: auto;
+            width: 100%;
+        }
+        .btn-add:hover {
+            background: #d4af37;
+            color: #1e1a16;
+        }
+        .btn-add.in-cart {
+            background: #d4af37;
+            color: #1e1a16;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 0;
+            color: #8a7a6e;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            display: none;
+        }
+        .no-results.show { display: block; }
+
+        .loading-products {
+            text-align: center;
+            padding: 60px 0;
+            color: #8a7a6e;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+        }
+
+        /* ===== CARRITO ===== */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: #fff;
+            box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+            padding: 28px 24px;
+            transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-overlay.open { right: 0; }
+        .cart-overlay .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .cart-overlay .cart-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+        }
+        .cart-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #5a4f47;
+        }
+        .cart-items-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3eee8;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: 600; font-size: 0.95rem; }
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cart-item-qty button {
+            background: #ede7df;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .cart-item-qty button:hover { background: #d4af37; }
+        .cart-item-price { font-weight: 600; margin-left: 16px; min-width: 60px; text-align: right; }
+        .cart-total {
+            border-top: 2px solid #1e1a16;
+            padding-top: 16px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .btn-wsp-checkout {
+            background: #25D366;
+            color: #fff;
+            border: none;
+            padding: 18px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+        .btn-wsp-checkout:hover { background: #1ebe5a; transform: scale(1.01); }
+        .btn-wsp-checkout:disabled {
+            background: #bbb;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .cart-empty-msg {
+            text-align: center;
+            color: #8a7a6e;
+            padding: 40px 0;
+        }
+        .backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .backdrop.show { opacity: 1; pointer-events: auto; }
+
+        /* ===== CONFIANZA ===== */
+        .trust {
+            padding: 40px 0 60px;
+            background: #f3eee8;
+            margin-top: 20px;
+            border-radius: 40px 40px 0 0;
+        }
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+        .trust-item h4 { font-weight: 700; margin-bottom: 4px; }
+        .trust-item p { color: #5a4f47; font-size: 0.9rem; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #1e1a16;
+            color: #b0a69b;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        footer a { color: #d4af37; text-decoration: none; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+            .trust-grid { grid-template-columns: 1fr; gap: 16px; }
+            .cart-overlay { max-width: 100%; right: -100%; }
+            .logo { font-size: 1.4rem; }
+            .btn-wsp-header span { display: none; }
+            .search-shortcut { display: none; }
+        }
+        @media (max-width: 480px) {
+            .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .product-card { padding: 14px; }
+            .product-img { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container header-flex">
+            <div class="logo">Alpha<span>Parfum</span></div>
+            <div class="header-actions">
+                <button class="cart-icon" id="cartToggle" aria-label="Abrir carrito">
+                    🛒 <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+                <a href="#" class="btn-wsp-header" id="directWspBtn">
+                    <span>📱</span> <span>Pedir por WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="container">
+            <h1>Fragancias que <span class="highlight">definen tu estilo</span></h1>
+            <p>Selecciona tus perfumes favoritos y completa tu pedido en <strong>WhatsApp</strong> en menos de 2 minutos.</p>
+
+            <!-- BUSCADOR -->
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="🔍 Buscar perfume por nombre o marca..." class="search-input" autocomplete="off">
+                <span class="search-shortcut">Ctrl+K</span>
+                <ul class="suggestions-list" id="suggestionsList"></ul>
+            </div>
+
+            <!-- FILTROS -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="hombre">Hombre</button>
+                <button class="filter-btn" data-filter="mujer">Mujer</button>
+                <button class="filter-btn" data-filter="unisex">Unisex</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PRODUCTOS ===== -->
+    <section class="container" id="productSection">
+        <div class="product-grid" id="productGrid">
+            <div class="loading-products">🔄 Cargando productos...</div>
+        </div>
+    </section>
+
+    <!-- ===== CONFIANZA ===== -->
+    <section class="trust">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <h4>💎 100% Originales</h4>
+                    <p>Garantizamos autenticidad. Compramos a distribuidores autorizados.</p>
+                </div>
+                <div class="trust-item">
+                    <h4>📦 Envío a todo el país</h4>
+                    <p>Entregas rápidas y seguras con seguimiento en tiempo real.</p>
+                </div>
+                <div class="trust-item">
+                    <h4>🤝 Atención personalizada</h4>
+                    <p>Te asesoramos por WhatsApp para encontrar tu fragancia ideal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <p>© 2026 AlphaParfum · <a href="#">Política de privacidad</a> · <a href="#">Términos</a></p>
+            <p style="margin-top: 6px; font-size: 0.8rem;">📱 Escríbenos: <a href="https://wa.me/573017725577" target="_blank">+57 301 772 5577</a></p>
+        </div>
+    </footer>
+
+    <!-- ===== CARRITO ===== -->
+    <div class="backdrop" id="backdrop"></div>
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-header">
+            <h2>🛒 Tu pedido</h2>
+            <button class="cart-close" id="cartClose">✕</button>
+        </div>
+        <div class="cart-items-list" id="cartItemsList">
+            <div class="cart-empty-msg">🛍️ Aún no has agregado perfumes.</div>
+        </div>
+        <div class="cart-total">
+            <span>Total</span>
+            <span id="cartTotal">$0</span>
+        </div>
+        <button class="btn-wsp-checkout" id="checkoutWspBtn" disabled>
+            📱 Enviar pedido por WhatsApp
+        </button>
+        <p style="text-align:center; font-size:0.75rem; color:#8a7a6e; margin-top:12px;">
+            Al hacer clic, serás redirigido a WhatsApp con tu pedido listo.
+        </p>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ===== JAVASCRIPT (TODA LA LÓGICA) ===== -->
+    <!-- ========================================================== -->
+    <script>
+        // ==========================================================
+        // 1. LISTA DE PRODUCTOS (AGREGA AQUÍ TODOS LOS TUYOS)
+        // ==========================================================
+        var products = [
+            { id: 1, name: 'Bleu de Chanel', brand: 'Chanel', price: 620000, category: 'hombre', emoji: '🧊', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Bleu' },
+            { id: 2, name: 'La Vie Est Belle', brand: 'Lancôme', price: 540000, category: 'mujer', emoji: '🌸', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=La+Vie' },
+            { id: 3, name: 'Sauvage', brand: 'Dior', price: 680000, category: 'hombre', emoji: '🌿', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Sauvage' },
+            { id: 4, name: 'Good Girl', brand: 'Carolina Herrera', price: 490000, category: 'mujer', emoji: '👠', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Good+Girl' },
+            { id: 5, name: 'Acqua di Giò', brand: 'Giorgio Armani', price: 510000, category: 'hombre', emoji: '🌊', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Acqua' },
+            { id: 6, name: 'Black Opium', brand: 'YSL', price: 560000, category: 'mujer', emoji: '☕', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Black+Opium' },
+            { id: 7, name: 'Light Blue', brand: 'Dolce&Gabbana', price: 470000, category: 'unisex', emoji: '🍋', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Light+Blue' },
+            { id: 8, name: 'Tobacco Vanille', brand: 'Tom Ford', price: 890000, category: 'unisex', emoji: '🔥', img: 'https://placehold.co/300x300/e8e0d5/5a4f47?text=Tobacco' }
+        ];
+
+        // ==========================================================
+        // 2. ESPERAR A QUE LA PÁGINA CARGUE COMPLETAMENTE
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // ==========================================================
+            // 3. REFERENCIAS A ELEMENTOS DEL DOM
+            // ==========================================================
+            var grid = document.getElementById('productGrid');
+            var noResults = document.getElementById('noResults');
+            var cartBadge = document.getElementById('cartBadge');
+            var cartItemsList = document.getElementById('cartItemsList');
+            var cartTotal = document.getElementById('cartTotal');
+            var checkoutBtn = document.getElementById('checkoutWspBtn');
+            var cartOverlay = document.getElementById('cartOverlay');
+            var cartToggle = document.getElementById('cartToggle');
+            var cartClose = document.getElementById('cartClose');
+            var backdrop = document.getElementById('backdrop');
+            var directWspBtn = document.getElementById('directWspBtn');
+            var searchInput = document.getElementById('searchInput');
+            var suggestionsList = document.getElementById('suggestionsList');
+
+            // ==========================================================
+            // 4. ESTADO DE LA APLICACIÓN
+            // ==========================================================
+            var cart = [];
+            var currentFilter = 'all';
+            var currentSearch = '';
+
+            // ==========================================================
+            // 5. FUNCIÓN PRINCIPAL: RENDERIZAR PRODUCTOS
+            // ==========================================================
+            function renderProducts(filter, searchTerm) {
+                // Valores por defecto
+                filter = filter || 'all';
+                searchTerm = searchTerm || '';
+
+                currentFilter = filter;
+                currentSearch = searchTerm;
+
+                // Paso 1: Filtrar por categoría
+                var filtered = [];
+                if (filter === 'all') {
+                    filtered = products.slice(); // Copia de todos los productos
+                } else {
+                    for (var i = 0; i < products.length; i++) {
+                        if (products[i].category === filter) {
+                            filtered.push(products[i]);
+                        }
+                    }
+                }
+
+                // Paso 2: Filtrar por búsqueda
+                if (searchTerm.trim() !== '') {
+                    var term = searchTerm.toLowerCase().trim();
+                    var searchFiltered = [];
+                    for (var j = 0; j < filtered.length; j++) {
+                        var nameLower = filtered[j].name.toLowerCase();
+                        var brandLower = filtered[j].brand.toLowerCase();
+                        if (nameLower.indexOf(term) !== -1 || brandLower.indexOf(term) !== -1) {
+                            searchFiltered.push(filtered[j]);
+                        }
+                    }
+                    filtered = searchFiltered;
+                }
+
+                // Paso 3: Mostrar resultados o mensaje de "sin resultados"
+                if (filtered.length === 0) {
+                    // Mostrar mensaje de no resultados
+                    grid.innerHTML = '<div class="no-results show">😕 No encontramos perfumes con ese nombre.<br><span style="font-size:0.9rem; color:#b0a69b;">Prueba con otra palabra o revisa los filtros.</span></div>';
+                    return;
+                }
+
+                // Paso 4: Generar HTML de los productos
+                var html = '';
+                for (var k = 0; k < filtered.length; k++) {
+                    var p = filtered[k];
+                    html += '<div class="product-card" data-id="' + p.id + '">';
+                    html += '    <div class="product-img" style="background-image: url(\'' + p.img + '\'); background-size: cover; display: flex; align-items: center; justify-content: center; font-size: 3rem;">';
+                    html += '        ' + p.emoji;
+                    html += '    </div>';
+                    html += '    <div class="product-name">' + p.name + '</div>';
+                    html += '    <div class="product-brand">' + p.brand + '</div>';
+                    html += '    <div class="product-price">$' + p.price.toLocaleString() + '</div>';
+                    html += '    <button class="btn-add" data-id="' + p.id + '">Agregar al carrito</button>';
+                    html += '</div>';
+                }
+
+                grid.innerHTML = html;
+
+                // Paso 5: Agregar eventos a los botones "Agregar"
+                var buttons = grid.querySelectorAll('.btn-add');
+                for (var l = 0; l < buttons.length; l++) {
+                    buttons[l].addEventListener('click', function() {
+                        var id = parseInt(this.getAttribute('data-id'));
+                        addToCart(id);
+                    });
+                }
+
+                // Paso 6: Actualizar estado de los botones (si ya están en el carrito)
+                updateCartUI();
+            }
+
+            // ==========================================================
+            // 6. FUNCIONES DEL CARRITO
+            // ==========================================================
+            function addToCart(id) {
+                // Buscar si el producto ya está en el carrito
+                var existing = null;
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].id === id) {
+                        existing = cart[i];
+                        break;
+                    }
+                }
+
+                if (existing) {
+                    existing.qty += 1;
+                } else {
+                    // Buscar el producto en la lista completa
+                    var product = null;
+                    for (var j = 0; j < products.length; j++) {
+                        if (products[j].id === id) {
+                            product = products[j];
+                            break;
+                        }
+                    }
+                    if (product) {
+                        cart.push({
+                            id: product.id,
+                            name: product.name,
+                            brand: product.brand,
+                            price: product.price,
+                            emoji: product.emoji,
+                            qty: 1
+                        });
+                    }
+                }
+
+                updateCartUI();
+
+                // Abrir el carrito si es el primer producto
+                if (cart.length === 1) {
+                    openCart();
+                }
+            }
+
+            function removeFromCart(id) {
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].id === id) {
+                        if (cart[i].qty > 1) {
+                            cart[i].qty -= 1;
+                        } else {
+                            cart.splice(i, 1);
+                        }
+                        break;
+                    }
+                }
+                updateCartUI();
+            }
+
+            function getTotal() {
+                var total = 0;
+                for (var i = 0; i < cart.length; i++) {
+                    total += cart[i].price * cart[i].qty;
+                }
+                return total;
+            }
+
+            function getTotalItems() {
+                var total = 0;
+                for (var i = 0; i < cart.length; i++) {
+                    total += cart[i].qty;
+                }
+                return total;
+            }
+
+            function updateCartUI() {
+                // Actualizar badge
+                var totalItems = getTotalItems();
+                cartBadge.textContent = totalItems;
+
+                // Actualizar lista del carrito
+                if (cart.length === 0) {
+                    cartItemsList.innerHTML = '<div class="cart-empty-msg">🛍️ Aún no has agregado perfumes.</div>';
+                    checkoutBtn.disabled = true;
+                } else {
+                    var html = '';
+                    for (var i = 0; i < cart.length; i++) {
+                        var item = cart[i];
+                        html += '<div class="cart-item">';
+                        html += '    <div class="cart-item-info">';
+                        html += '        <div class="cart-item-name">' + item.emoji + ' ' + item.name + '</div>';
+                        html += '        <div style="font-size:0.8rem; color:#8a7a6e;">' + item.brand + '</div>';
+                        html += '    </div>';
+                        html += '    <div class="cart-item-qty">';
+                        html += '        <button onclick="window.removeFromCart(' + item.id + ')">−</button>';
+                        html += '        <span>' + item.qty + '</span>';
+                        html += '        <button onclick="window.addToCart(' + item.id + ')">+</button>';
+                        html += '    </div>';
+                        html += '    <div class="cart-item-price">$' + (item.price * item.qty).toLocaleString() + '</div>';
+                        html += '</div>';
+                    }
+                    cartItemsList.innerHTML = html;
+                    checkoutBtn.disabled = false;
+                }
+
+                // Actualizar total
+                cartTotal.textContent = '$' + getTotal().toLocaleString();
+
+                // Actualizar botones de productos (cambiar texto)
+                var buttons = grid.querySelectorAll('.btn-add');
+                for (var j = 0; j < buttons.length; j++) {
+                    var id = parseInt(buttons[j].getAttribute('data-id'));
+                    var inCart = false;
+                    for (var k = 0; k < cart.length; k++) {
+                        if (cart[k].id === id) {
+                            inCart = true;
+                            break;
+                        }
+                    }
+                    buttons[j].textContent = inCart ? '✔ Agregado' : 'Agregar al carrito';
+                    if (inCart) {
+                        buttons[j].classList.add('in-cart');
+                    } else {
+                        buttons[j].classList.remove('in-cart');
+                    }
+                }
+            }
+
+            // Exponer funciones al ámbito global para que funcionen desde HTML
+            window.addToCart = addToCart;
+            window.removeFromCart = removeFromCart;
+
+            // ==========================================================
+            // 7. CARRITO OVERLAY (Abrir/Cerrar)
+            // ==========================================================
+            function openCart() {
+                cartOverlay.classList.add('open');
+                backdrop.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCart() {
+                cartOverlay.classList.remove('open');
+                backdrop.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+
+            if (cartToggle) cartToggle.addEventListener('click', openCart);
+            if (cartClose) cartClose.addEventListener('click', closeCart);
+            if (backdrop) backdrop.addEventListener('click', closeCart);
+
+            // ==========================================================
+            // 8. ENVIAR PEDIDO POR WHATSAPP
+            // ==========================================================
+            function sendOrderToWhatsApp() {
+                if (cart.length === 0) return;
+
+                var items = '';
+                for (var i = 0; i < cart.length; i++) {
+                    var item = cart[i];
+                    items += '• ' + item.emoji + ' ' + item.name + ' (' + item.brand + ') × ' + item.qty + ' = $' + (item.price * item.qty).toLocaleString() + '\n';
+                }
+
+                var total = getTotal().toLocaleString();
+                var message = 'Hola, quiero realizar el siguiente pedido en AlphaParfum:\n\n' + items + '\n——————————\n💰 Total: $' + total + '\n\n✅ Confirmar disponibilidad y envío, por favor.';
+                var encoded = encodeURIComponent(message);
+                var phone = '573017725577';
+                var url = 'https://wa.me/' + phone + '?text=' + encoded;
+                window.open(url, '_blank');
+                closeCart();
+            }
+
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function() {
+                    if (cart.length === 0) return;
+                    sendOrderToWhatsApp();
+                });
+            }
+
+            if (directWspBtn) {
+                directWspBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (cart.length === 0) {
+                        alert('Agrega al menos un perfume a tu pedido primero.');
+                        return;
+                    }
+                    sendOrderToWhatsApp();
+                });
+            }
+
+            // ==========================================================
+            // 9. BUSCADOR CON AUTOCOMPLETADO Y ATAJOS DE TECLADO
+            // ==========================================================
+            var selectedSuggestionIndex = -1;
+
+            if (searchInput) {
+
+                // Atajo Ctrl+K para enfocar el buscador
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                    // Tecla "/" también enfoca (como en muchos sitios)
+                    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                        var tag = document.activeElement.tagName;
+                        if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+                            e.preventDefault();
+                            searchInput.focus();
+                            searchInput.select();
+                        }
+                    }
+                });
+
+                // Evento input: mostrar sugerencias
+                searchInput.addEventListener('input', function() {
+                    var term = this.value.trim();
+                    suggestionsList.innerHTML = '';
+                    suggestionsList.classList.remove('show');
+                    selectedSuggestionIndex = -1;
+
+                    if (term === '') {
+                        renderProducts(currentFilter, '');
+                        return;
+                    }
+
+                    // Buscar coincidencias
+                    var matches = [];
+                    var termLower = term.toLowerCase();
+                    for (var i = 0; i < products.length; i++) {
+                        var p = products[i];
+                        if (p.name.toLowerCase().indexOf(termLower) !== -1 ||
+                            p.brand.toLowerCase().indexOf(termLower) !== -1) {
+                            matches.push(p);
+                        }
+                    }
+
+                    if (matches.length > 0 && term.length >= 2) {
+                        suggestionsList.classList.add('show');
+                        var topMatches = matches.slice(0, 10);
+
+                        for (var j = 0; j < topMatches.length; j++) {
+                            var p = topMatches[j];
+                            var li = document.createElement('li');
+
+                            // Resaltar la coincidencia en el nombre
+                            var nameLower = p.name.toLowerCase();
+                            var index = nameLower.indexOf(termLower);
+                            var highlightedName = p.name;
+                            if (index !== -1) {
+                                highlightedName = p.name.substring(0, index) +
+                                    '<strong>' + p.name.substring(index, index + term.length) + '</strong>' +
+                                    p.name.substring(index + term.length);
+                            }
+
+                            li.innerHTML = '<span class="suggestion-emoji">' + p.emoji + '</span>' +
+                                '<span class="suggestion-name">' + highlightedName + '</span>' +
+                                '<span class="suggestion-brand">(' + p.brand + ')</span>' +
+                                '<span class="suggestion-price">$' + p.price.toLocaleString() + '</span>';
+
+                            li.addEventListener('click', function(product) {
+                                return function() {
+                                    searchInput.value = product.name;
+                                    suggestionsList.classList.remove('show');
+                                    renderProducts(currentFilter, product.name);
+                                    selectedSuggestionIndex = -1;
+                                };
+                            }(p));
+
+                            suggestionsList.appendChild(li);
+                        }
+
+                        // Opción "Ver todos los resultados"
+                        if (matches.length > 10) {
+                            var li = document.createElement('li');
+                            li.innerHTML = '🔍 Ver ' + matches.length + ' resultados...';
+                            li.style.fontWeight = '600';
+                            li.style.color = '#d4af37';
+                            li.style.justifyContent = 'center';
+                            li.addEventListener('click', function() {
+                                suggestionsList.classList.remove('show');
+                                renderProducts(currentFilter, term);
+                                selectedSuggestionIndex = -1;
+                            });
+                            suggestionsList.appendChild(li);
+                        }
+                    } else {
+                        renderProducts(currentFilter, term);
+                    }
+                });
+
+                // Navegación con teclado en sugerencias (flechas + Enter)
+                searchInput.addEventListener('keydown', function(e) {
+                    var suggestions = suggestionsList.querySelectorAll('li');
+
+                    if (suggestions.length === 0) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestions.length;
+                        for (var i = 0; i < suggestions.length; i++) {
+                            suggestions[i].style.background = (i === selectedSuggestionIndex) ? '#d4af37' : '';
+                            suggestions[i].style.color = (i === selectedSuggestionIndex) ? '#1e1a16' : '';
+                        }
+                    }
+
+                    if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        selectedSuggestionIndex = (selectedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
+                        for (var i = 0; i < suggestions.length; i++) {
+                            suggestions[i].style.background = (i === selectedSuggestionIndex) ? '#d4af37' : '';
+                            suggestions[i].style.color = (i === selectedSuggestionIndex) ? '#1e1a16' : '';
+                        }
+                    }
+
+                    if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+                        e.preventDefault();
+                        var selected = suggestions[selectedSuggestionIndex];
+                        if (selected) {
+                            selected.click();
+                            suggestionsList.classList.remove('show');
+                            selectedSuggestionIndex = -1;
+                        }
+                    }
+                });
+
+                // Cerrar sugerencias al hacer clic fuera
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.search-wrapper')) {
+                        suggestionsList.classList.remove('show');
+                        selectedSuggestionIndex = -1;
+                    }
+                });
+
+                // Escape para cerrar sugerencias
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        suggestionsList.classList.remove('show');
+                        selectedSuggestionIndex = -1;
+                        this.blur();
+                    }
+                });
+            }
+
+            // ==========================================================
+            // 10. FILTROS POR CATEGORÍA
+            // ==========================================================
+            var filterButtons = document.querySelectorAll('.filter-btn');
+            for (var f = 0; f < filterButtons.length; f++) {
+                filterButtons[f].addEventListener('click', function() {
+                    // Remover clase active de todos
+                    for (var b = 0; b < filterButtons.length; b++) {
+                        filterButtons[b].classList.remove('active');
+                    }
+                    this.classList.add('active');
+
+                    var filter = this.getAttribute('data-filter');
+                    var searchTerm = searchInput ? searchInput.value : '';
+                    renderProducts(filter, searchTerm);
+                });
+            }
+
+            // ==========================================================
+            // 11. INICIALIZAR: Mostrar todos los productos
+            // ==========================================================
+            renderProducts('all', '');
+
+            // Mostrar mensaje de depuración en consola
+            console.log('✅ AlphaParfum cargado correctamente');
+            console.log('📦 Total de productos:', products.length);
+
+        }); // Fin de DOMContentLoaded
+    </script>
+
+</body>
+</html>
